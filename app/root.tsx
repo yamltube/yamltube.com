@@ -17,7 +17,7 @@ import tailwindStylesheetUrl from "./styles/tailwind.css";
 import { getUser } from "./session.server";
 
 export const meta: MetaFunction = () => {
-  return { title: "YamlTube: YouTube Playlists in YAML" };
+  return { title: "YamlTube | YouTube Playlists in YAML" };
 };
 
 export const links: LinksFunction = () => {

@@ -42,6 +42,7 @@ export default function App() {
       <body className="h-full">
         <Outlet />
         <ScrollRestoration />
+        <script src="https://accounts.google.com/gsi/client" async defer/>
         <Scripts />
         <LiveReload />
       </body>

@@ -16,7 +16,10 @@ export default function Index() {
             </span>
           </h1>
           <div className="mx-auto mt-10 max-w-sm pb-3 sm:flex sm:max-w-none sm:justify-center">
-            <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
+            <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-4 sm:gap-5 sm:space-y-0">
+              <div className="text-black-400 flex items-center justify-center rounded-md border border-transparent text-base font-medium">
+                {'❌'}
+              </div>
               <button className="text-black-400 flex items-center justify-center rounded-md border border-transparent bg-gray-200 px-4 py-3 text-base font-medium shadow-sm hover:bg-green-50 sm:px-8">
                 <svg viewBox="0 0 20 20" className="h-5 w-5 pr-1">
                   <path
@@ -54,6 +57,9 @@ export default function Index() {
                 </svg>
                 Google
               </button>
+              <div className="text-black-400 flex items-center justify-center rounded-md border border-transparent text-base font-medium">
+                {'❌'}
+              </div>
               <div className="g-signin2" data-onsuccess="onSignIn"></div>
             </div>
           </div>
@@ -62,7 +68,7 @@ export default function Index() {
               <img
                 className="h-full w-full object-cover"
                 src="/pretty.jpg"
-                alt="BTS playing on stage with the group leaving in action poses"
+                alt="The Main Event"
               />
               <div className="bg-[color:rgba(255, 0, 0, 0.8)] absolute inset-0 mix-blend-multiply" />
             </div>

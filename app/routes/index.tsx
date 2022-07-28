@@ -17,6 +17,9 @@ import {
   isValidGithubToken,
   isValidPulumiToken,
   createOrUpdateRepo,
+  GoogleStorageKey,
+  GithubStorageKey,
+  PulumiStorageKey,
 } from "~/utils";
 import { PulumiSvg } from "./pulumi/svg";
 
@@ -44,19 +47,33 @@ const Step = {
   Done: <>enjoy your day!</>,
 };
 
+function isValidRepo(repo: string) {
+  return /.+\/.+/.test(repo);
+}
+
 export default function Index() {
   const [pulumiToken, setPulumiToken] = useState<string>("");
   const [githubData, setGitHubData] = useState<OauthAccessToken | undefined>();
   const [googleData, setGoogleData] = useState<OauthAccessToken | undefined>();
   const [repo, setRepo] = useState("");
-  const [step, setStep] = useState<keyof typeof Step>();
+  const [goClicked, setGoClicked] = useState(false);
   const [missing, setMissing] = useState<ReadonlyArray<JSX.Element>>([]);
 
   function message(missing: ReadonlyArray<JSX.Element>) {
-    if (missing.length === 0 && !repo) {
-      return <>you gotta enter a repo name</>;
-    }
     if (missing.length === 0) {
+      if (!repo) {
+        return <>you gotta enter a repo name</>;
+      }
+      if (!isValidRepo(repo)) {
+        return <>include the owner, like mchaynes/yamltube</>;
+      }
+      if (!goClicked) {
+        return (
+          <>
+            click <span className="font-bold">go</span>!
+          </>
+        );
+      }
       return <>enjoy your day!</>;
     }
     if (missing.length === 3) {
@@ -68,11 +85,11 @@ export default function Index() {
       right = missing[1];
     }
     return (
-      <>
-        <div className="inline-block pl-1">{left}</div>
+      <div className="flex flex-row items-center justify-center">
+        <div className="mr-3 w-8">{left}</div>
         almost there
-        <div className="inline-block pl-1">{right}</div>
-      </>
+        <div className="ml-3 w-8">{right}</div>
+      </div>
     );
   }
 
@@ -91,26 +108,51 @@ export default function Index() {
   }, []);
 
   useEffect(() => {
+    const token = localStorage.getItem(PulumiStorageKey);
+    if (token) {
+      setPulumiToken(token);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(PulumiStorageKey, pulumiToken);
+  }, [pulumiToken]);
+
+  useEffect(() => {
     let missing = [];
     if (!isValidGithubToken(githubData)) {
       missing.push(GithubSvg());
     }
     if (!isValidGoogleToken(googleData)) {
-      missing.push(GoogleSvg());
+      missing.push(YoutubeSvg());
     }
     if (!isValidPulumiToken(pulumiToken)) {
       missing.push(PulumiSvg());
-    }
-    if (missing.length === 3) {
-      setStep("Start");
     }
     setMissing(missing);
   }, [githubData, googleData, pulumiToken]);
 
   async function onClick() {
-    if (githubData && googleData) {
+    if (githubData && googleData && isValidRepo(repo)) {
       await createOrUpdateRepo(repo, githubData, googleData, pulumiToken);
+      setGoClicked(true);
+      window.open(`https://github.com/${repo}`);
     }
+  }
+
+  function deleteGoogleData() {
+    localStorage.removeItem(GoogleStorageKey);
+    setGoogleData(undefined);
+  }
+
+  function deleteGitHubData() {
+    localStorage.removeItem(GithubStorageKey);
+    setGitHubData(undefined);
+  }
+
+  function deletePulumiData() {
+    localStorage.removeItem(PulumiStorageKey);
+    setPulumiToken("");
   }
 
   const buttonCss =
@@ -119,7 +161,7 @@ export default function Index() {
     <main>
       <div className="flex flex-col flex-wrap items-center">
         {/* HEADER */}
-        <div className="flex w-full flex-col items-center border-b-2 border-gray-200 p-2 px-3 text-center font-extrabold shadow-md">
+        <div className="flex w-full flex-col items-center border-b-2 border-gray-200 p-2 px-3 text-center font-extrabold">
           <h1 className="text-6xl text-red-500 drop-shadow-md sm:text-8xl lg:text-7xl">
             yamltube
           </h1>
@@ -140,18 +182,17 @@ export default function Index() {
         {/* BODY */}
         <div className="mb-4"></div>
 
-        <p className="mx-2 max-w-lg text-center font-semibold text-gray-600">
-          set up your yamltube repo here. i set up oauth apps for this lil site
-          so that it only takes a couple clicks to set up yamltube on github.
+        <p className="mx-2 max-w-lg text-center font-extrabold text-gray-600">
+          set up yamltube on github with only a couple clicks.
         </p>
-        <div className="mt-4" />
+        <div className="mt-2" />
         <p className="mx-2 max-w-lg text-center font-semibold text-gray-600">
-          by the way, only your browser uses the access you granted. after you
-          click <span className="font-extrabold text-green-500">go</span> only
-          your github repo has access to your accounts.
+          i never use the access you grant to the site. after you click{" "}
+          <span className="font-extrabold text-green-500">go</span>, only your
+          github repo has access to your accounts.
         </p>
-        <div className="mt-10"></div>
-        <div className="mt-6 flex flex-col flex-wrap items-center rounded-xl border-2">
+        <div className="mt-6" />
+        <div className="flex flex-col flex-wrap items-center rounded-xl border-2">
           <div className="mt-2 flex flex-row items-stretch gap-11 p-2">
             <div className="flex flex-col items-center">
               <a href={getGithubOAuthUrl()}>
@@ -163,20 +204,26 @@ export default function Index() {
                 </button>
               </a>
               <div className="text-base font-medium">
-                {isValidGithubToken(githubData) ? "✅" : "❌"}
+                <Check
+                  goodToGo={isValidGithubToken(githubData)}
+                  onConfirm={deleteGitHubData}
+                />
               </div>
             </div>
             <div className="flex flex-col items-center">
               <a href={getGoogleOAuthUrl()}>
                 <button className={buttonCss}>
                   <div className="flex flex-row items-center">
-                    {YoutubeSvg()}
+                    <div className="mr-1 w-6">{YoutubeSvg()}</div>
                     youtube
                   </div>
                 </button>
               </a>
               <div className="text-base font-medium">
-                {isValidGoogleToken(googleData) ? "✅" : "❌"}
+                <Check
+                  goodToGo={isValidGoogleToken(googleData)}
+                  onConfirm={deleteGoogleData}
+                />
               </div>
             </div>
           </div>
@@ -197,20 +244,24 @@ export default function Index() {
             </h5>
             <div className="ml-4 flex flex-row items-center justify-items-stretch self-start border-0">
               <div className="form-input mr-3 flex h-10 min-h-fit flex-grow flex-row items-center rounded-md border-0 p-0 text-sm">
-                <div className="">{PulumiSvg()}</div>
+                <div className="h-8 w-8">{PulumiSvg()}</div>
                 <input
                   type="password"
                   placeholder="pul-somereallylongstring"
                   className="border-1 h-full w-52 flex-grow rounded-md p-0 pl-2 text-sm"
+                  value={pulumiToken}
                   onChange={(e) => setPulumiToken(e.target.value)}
                 />
               </div>
 
-              {isValidPulumiToken(pulumiToken) ? "✅" : "❌"}
+              <Check
+                goodToGo={isValidPulumiToken(pulumiToken)}
+                onConfirm={deletePulumiData}
+              />
             </div>
             <div className="m-2 mt-8 flex flex-col items-center border-t-2 border-gray-500 bg-slate-100 p-8 pt-2 pb-2">
               <div className="flex min-w-full self-start border-b-2 border-gray-500 p-1 pl-4 pb-2">
-                create or update yamltube repo
+                github repo
               </div>
               <div className="mb-1 w-full " />
               <div className="flex flex-row items-center gap-2">
@@ -224,7 +275,8 @@ export default function Index() {
                   disabled={
                     !googleData ||
                     !githubData ||
-                    !isValidPulumiToken(pulumiToken)
+                    !isValidPulumiToken(pulumiToken) ||
+                    !isValidRepo(repo)
                   }
                   className={
                     "rounded-md border border-transparent bg-green-500 px-4 py-1 font-bold text-white shadow-sm hover:bg-green-800 disabled:bg-red-500"
@@ -255,9 +307,46 @@ export default function Index() {
           </div>
         </div>
         <div className="mt-4"></div>
+
         {FAQ()}
       </div>
     </main>
+  );
+}
+
+type CheckProps = {
+  goodToGo: boolean;
+  onConfirm: () => void;
+};
+
+function Check({ goodToGo, onConfirm }: CheckProps) {
+  const [clicked, setClicked] = useState(false);
+
+  function onClick() {
+    if (clicked) {
+      onConfirm();
+    }
+    if (goodToGo) {
+      setClicked(true);
+      // reset clicked status after 3 seconds
+      setTimeout(() => setClicked(false), 3000);
+    }
+  }
+
+  let val = "❌";
+
+  if (goodToGo) {
+    val = "✅";
+  }
+
+  if (goodToGo && clicked) {
+    val = "🗑";
+  }
+
+  return (
+    <div className={goodToGo ? "cursor-pointer" : ""} onClick={onClick}>
+      {val}
+    </div>
   );
 }
 
@@ -267,8 +356,7 @@ export function FAQ() {
       <Accordian
         titleContents={
           <span>
-            what does clicking{" "}
-            <span className="font-extrabold text-green-500">go</span> do?
+            what does clicking <span className="font-bold">go</span> do?
           </span>
         }
       >
@@ -277,7 +365,7 @@ export function FAQ() {
           run yamltube fully in github actions.{" "}
         </p>
         <p>
-          more specifically your browser will use the github credentials you
+          more specifically, your browser will use the github credentials you
           granted to yamltube to go create a github repo based on the
           `mchaynes/yamltube` template repo.
         </p>

@@ -76,7 +76,7 @@ export function getGithubOAuthUrl() {
 
   url.searchParams.set("client_id", githubClientId);
   // url.searchParams.set("client_secret", "76196214f67f18532ea4c356f3dea395d9eaa50f")
-  url.searchParams.set("redirect_uri", "http://localhost:3000/github/callback");
+  url.searchParams.set("redirect_uri", "https://yamltube.com/github/callback");
   url.searchParams.set("scope", githubScope);
   url.searchParams.set("state", "big ole nuggets and shit");
   return url.toString();
@@ -99,12 +99,12 @@ export function getGithubAccessToken() {
 }
 
 export const googleClientId =
-  "950442956992-h8s172bdvuclvekmrqf8ltr64jnkh2k5.apps.googleusercontent.com";
+  "950442956992-efiotr5gl9msjmbifc0ijt8pie7n9h2h.apps.googleusercontent.com";
 
 // https://developers.google.com/youtube/v3/guides/auth/installed-apps
 export const googleScope = "https://www.googleapis.com/auth/youtube";
 
-const GoogleStorageKey = "google_key";
+export const GoogleStorageKey = "google_key";
 
 export type OauthAccessToken = {
   access_token: string;
@@ -113,6 +113,8 @@ export type OauthAccessToken = {
   scope: string;
   expires_in: string;
 };
+
+export const PulumiStorageKey = "pulumi_token";
 
 export function isValidPulumiToken(token: string): boolean {
   return token?.startsWith("pul-");
@@ -141,7 +143,7 @@ export function getGoogleOAuthUrl(): string {
   const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
 
   url.searchParams.set("client_id", googleClientId);
-  url.searchParams.set("redirect_uri", "http://localhost:3000/google/callback");
+  url.searchParams.set("redirect_uri", "http://yamltube.com/google/callback");
   url.searchParams.set("response_type", "code");
   url.searchParams.set("include_granted_scopes", "true");
   url.searchParams.set("access_type", "offline");

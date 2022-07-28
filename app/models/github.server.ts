@@ -13,7 +13,7 @@ export async function getGithubAccessToken(
     clientSecret || (process.env.GITHUB_CLIENT_SECRET as string)
   );
   data.append("code", code);
-  data.append("redirect_uri", "http://localhost:3000/github/callback");
+  data.append("redirect_uri", "https://yamltube.com/github/callback");
 
   const resp = await fetch("https://github.com/login/oauth/access_token", {
     method: "POST",

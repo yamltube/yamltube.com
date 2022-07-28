@@ -20,7 +20,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (code) {
     accessToken = await getGoogleAccessToken(
       code,
-      "http://localhost:3000/google/callback"
+      "https://yamltube.com/google/callback"
     );
     if ("error" in accessToken) {
       console.log(`Error: ${JSON.stringify(accessToken)}`);

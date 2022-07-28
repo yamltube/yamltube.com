@@ -12,13 +12,12 @@ export async function getGoogleAccessToken(
   clientSecret?: string
 ) {
   const jsondata = {
-    "client_id": clientId || googleClientId,
-    "client_secret": clientSecret || (process.env.GOOGLE_CLIENT_SECRET),
-    "redirect_uri": redirectUri,
-    "code": code,
-    "grant_type": "authorization_code",
-  }
-  console.log(JSON.stringify(jsondata))
+    client_id: clientId || googleClientId,
+    client_secret: clientSecret || process.env.GOOGLE_CLIENT_SECRET,
+    redirect_uri: redirectUri,
+    code: code,
+    grant_type: "authorization_code",
+  };
   const data = new FormData();
   data.append("client_id", clientId || googleClientId);
   data.append(

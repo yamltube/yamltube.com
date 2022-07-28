@@ -306,7 +306,7 @@ export default function Index() {
             </div>
           </div>
         </div>
-        <div className="mt-4"></div>
+        <div className="mt-1 mb-8" />
 
         {FAQ()}
       </div>
@@ -374,7 +374,7 @@ export function FAQ() {
         titleContents={<span>where is the token stored exactly?</span>}
       >
         <p>
-          GitHub Repo {"=>"} Settings {"=>"} Secrets {"=>"} Actions
+          github repo {"=>"} settings {"=>"} secrets {"=>"} actions
         </p>
       </Accordian>
       <Accordian

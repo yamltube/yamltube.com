@@ -143,7 +143,7 @@ export function getGoogleOAuthUrl(): string {
   const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
 
   url.searchParams.set("client_id", googleClientId);
-  url.searchParams.set("redirect_uri", "http://yamltube.com/google/callback");
+  url.searchParams.set("redirect_uri", "https://yamltube.com/google/callback");
   url.searchParams.set("response_type", "code");
   url.searchParams.set("include_granted_scopes", "true");
   url.searchParams.set("access_type", "offline");

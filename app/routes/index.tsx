@@ -161,29 +161,31 @@ export default function Index() {
     <main>
       <div className="flex flex-col flex-wrap items-center">
         {/* HEADER */}
-        <div className="flex w-full flex-col items-center border-b-2 border-gray-200 p-2 px-3 text-center font-extrabold">
+        <div className="flex w-full flex-col items-center justify-center border-b-2 border-gray-200 p-2 px-3 text-center font-extrabold">
           <h1 className="text-6xl text-red-500 drop-shadow-md sm:text-8xl lg:text-7xl">
             yamltube
           </h1>
           <div className="mt-2" />
-          <h4 className="text-center text-base font-extrabold tracking-tight text-gray-600 sm:text-xl lg:text-2xl">
-            create youtube playlists on github
-          </h4>
-          <div className="mt-4" />
-          <iframe
-            src="https://ghbtns.com/github-btn.html?user=mchaynes&repo=yamltube&type=star&count=true"
-            frameBorder="0"
-            scrolling="0"
-            width="150"
-            height="20"
-            title="GitHub"
-          ></iframe>
+          <div className="space-between flex flex-row items-center space-x-1">
+            <h4 className="text-center text-base font-extrabold tracking-tight text-gray-600 sm:text-xl lg:text-2xl">
+              youtube playlists on github
+            </h4>
+            <div className="mt-4" />
+            <iframe
+              src="https://ghbtns.com/github-btn.html?user=mchaynes&repo=yamltube&type=star&count=true"
+              frameBorder="0"
+              scrolling="0"
+              width="150"
+              height="20"
+              title="GitHub"
+            ></iframe>
+          </div>
         </div>
         {/* BODY */}
         <div className="mb-4"></div>
 
         <p className="mx-2 max-w-lg text-center font-extrabold text-gray-600">
-          set up yamltube on github with only a couple clicks.
+          make youtube playlists on github with only a couple of clicks.
         </p>
         <div className="mt-2" />
         <p className="mx-2 max-w-lg text-center font-semibold text-gray-600">
@@ -297,7 +299,7 @@ export default function Index() {
                 width="3840"
                 height="2160"
                 className="rounded-2xl object-contain"
-                src="/pretty.jpg"
+                src="/thelilguy.jpg"
                 alt="The Main Event"
               />
             </div>
@@ -328,8 +330,8 @@ function Check({ goodToGo, onConfirm }: CheckProps) {
     }
     if (goodToGo) {
       setClicked(true);
-      // reset clicked status after 3 seconds
-      setTimeout(() => setClicked(false), 3000);
+      // reset clicked status after 1 seconds
+      setTimeout(() => setClicked(false), 1000);
     }
   }
 
@@ -344,7 +346,10 @@ function Check({ goodToGo, onConfirm }: CheckProps) {
   }
 
   return (
-    <div className={goodToGo ? "cursor-pointer" : ""} onClick={onClick}>
+    <div
+      className={goodToGo ? "cursor-pointer hover:drop-shadow-2xl" : ""}
+      onClick={onClick}
+    >
       {val}
     </div>
   );
@@ -369,6 +374,14 @@ export function FAQ() {
           granted to yamltube to go create a github repo based on the
           `mchaynes/yamltube` template repo.
         </p>
+        <p>
+          i set up github and google oauth apps so that you don't have to go
+          copy a bunch of stuff from different websites if you want to use
+          yamltube. the only reason this exists is to make set up easier.
+        </p>
+      </Accordian>
+      <Accordian titleContents={<span>are you going to steal my data?</span>}>
+        no. but i could! don't trust random websites with your data!
       </Accordian>
       <Accordian
         titleContents={<span>where is the token stored exactly?</span>}
@@ -384,9 +397,10 @@ export function FAQ() {
       >
         <p>
           yamltube needs a google token to interact with youtube. when you log
-          in to google, the website receives a token we save to github actions.
-          to get that token at all, you need an oauth2 application set up with
-          google. you can set this site up manually if you want
+          in to google, the website receives a token we save to a github actions
+          secret. to get that token at all, you need an oauth2 application set
+          up with google. just to make it faster for you i set one up you can
+          use. you can totally set this site up manually if you want.
         </p>
       </Accordian>
       <Accordian titleContents={<span>what exactly does this site do?</span>}>
@@ -402,9 +416,7 @@ export function FAQ() {
         yourself with your own google and github oauth apps to generate your
         access tokens.
       </Accordian>
-      <Accordian titleContents={<span>are you going to steal my data?</span>}>
-        no. but i could! don't trust random websites with your data!
-      </Accordian>
+
       <Accordian
         titleContents={<span>does this site store any credentials?</span>}
       >

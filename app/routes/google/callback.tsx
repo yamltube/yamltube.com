@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { getGoogleAccessToken } from "~/models/google.server";
 import type { OauthAccessToken } from "~/utils";
 import { setGoogleAccessToken } from "~/utils";
+import { config } from "~/config";
 
 type LoaderData = {
   token: OauthAccessToken;
@@ -18,10 +19,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Response("No code sent", { status: 400 });
   }
   if (code) {
-    accessToken = await getGoogleAccessToken(
-      code,
-      "https://yamltube.com/google/callback"
-    );
+    accessToken = await getGoogleAccessToken(code, config.google.redirectUri);
     if ("error" in accessToken) {
       console.log(`Error: ${JSON.stringify(accessToken)}`);
       throw new Response("Failed to create access token", { status: 500 });

@@ -1,31 +1,22 @@
 import type { OauthAccessToken } from "~/utils";
-import { googleClientId } from "~/utils";
+import { config } from "~/config";
 
 /**
  * Gets an OAuth2 token from Google.
  * https://developers.google.com/youtube/v3/guides/auth/server-side-web-apps#exchange-authorization-code
  */
-export async function getGoogleAccessToken(
-  code: string,
-  redirectUri: string,
-  clientId?: string,
-  clientSecret?: string
-) {
+export async function getGoogleAccessToken(code: string, redirectUri: string) {
   const jsondata = {
-    client_id: clientId || googleClientId,
-    client_secret: clientSecret || process.env.GOOGLE_CLIENT_SECRET,
+    client_id: config.google.clientId,
+    client_secret: process.env.GOOGLE_CLIENT_SECRET,
     redirect_uri: redirectUri,
     code: code,
     grant_type: "authorization_code",
   };
   const data = new FormData();
-  data.append("client_id", clientId || googleClientId);
-  data.append(
-    "client_secret",
-    clientSecret || (process.env.GOOGLE_CLIENT_SECRET as string)
-  );
+  data.append("client_id", config.google.clientId);
+  data.append("client_secret", process.env.GOOGLE_CLIENT_SECRET as string);
   data.append("code", code);
-  // data.append("grant_type", "authorization_code");
   data.append("redirect_uri", redirectUri);
 
   const resp = await fetch("https://oauth2.googleapis.com/token", {

@@ -1,21 +1,14 @@
 import type { OauthAccessToken } from "~/utils";
-import { githubClientId } from "~/utils";
+import { config } from "~/config";
 
-export async function getGithubAccessToken(
-  code: string,
-  clientId?: string,
-  clientSecret?: string
-) {
+export async function getGithubAccessToken(code: string) {
   const data = new FormData();
-  data.append("client_id", clientId || githubClientId);
-  data.append(
-    "client_secret",
-    clientSecret || (process.env.GITHUB_CLIENT_SECRET as string)
-  );
+  data.append("client_id", config.github.clientId);
+  data.append("client_secret", process.env.GITHUB_CLIENT_SECRET as string);
   data.append("code", code);
-  data.append("redirect_uri", "https://yamltube.com/github/callback");
+  data.append("redirect_uri", config.github.callbackUri);
 
-  const resp = await fetch("https://github.com/login/oauth/access_token", {
+  const resp = await fetch(config.github.accessTokenUri, {
     method: "POST",
     body: data,
     headers: {

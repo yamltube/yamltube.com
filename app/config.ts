@@ -1,15 +1,5 @@
 function determineBaseUrl() {
-  try {
-    if (!window) {
-      console.log("window not defined");
-      return "https://yamltube.com";
-    }
-    const url = new URL(window.location.href);
-
-    return `${url.protocol}://${url.hostname}:${url.port}`;
-  } catch (e) {
-    return "https://yamltube.com";
-  }
+  return "http://localhost:3000";
 }
 
 const baseUrl = determineBaseUrl();

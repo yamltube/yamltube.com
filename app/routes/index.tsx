@@ -11,8 +11,6 @@ import {
   getGoogleAccessToken,
   getGoogleOAuthUrl,
   getGithubAccessToken,
-  GithubRepo,
-  getGithubRepos,
   isValidGoogleToken,
   isValidGithubToken,
   isValidPulumiToken,
@@ -22,30 +20,6 @@ import {
   PulumiStorageKey,
 } from "~/utils";
 import { PulumiSvg } from "./pulumi/svg";
-
-const Step = {
-  Start: <>you gotta turn the ❌ into ✅</>,
-  MissingGoogle: (
-    <>
-      <div className="inline-block pl-1">{GoogleSvg()}</div>
-      almost there
-      <div className="inline-block pl-1">{GoogleSvg()}</div>
-    </>
-  ),
-  GithubPulumi: (
-    <>
-      <div className="inline-block pl-1">{GithubSvg()}</div>
-      almost there
-      <div className="inline-block pl-1">{GithubSvg()}</div>
-    </>
-  ),
-  MissingPulumi: (
-    <>
-      <div className="inline-block pl-1"></div>
-    </>
-  ),
-  Done: <>enjoy your day!</>,
-};
 
 function isValidRepo(repo: string) {
   return /.+\/.+/.test(repo);

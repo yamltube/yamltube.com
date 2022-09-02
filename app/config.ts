@@ -21,5 +21,4 @@ export const config = {
     callbackUri: `${baseUrl}/github/callback`,
     accessTokenUri: "https://github.com/login/oauth/access_token",
   },
-  yamltube: {},
 };

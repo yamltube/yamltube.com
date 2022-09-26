@@ -1,14 +1,14 @@
 import type { OauthAccessToken } from "~/utils";
-import { config } from "~/config";
+import { getConfig } from "~/config";
 
 export async function getGithubAccessToken(code: string) {
   const data = new FormData();
-  data.append("client_id", config.github.clientId);
+  data.append("client_id", getConfig().github.clientId);
   data.append("client_secret", process.env.GITHUB_CLIENT_SECRET as string);
   data.append("code", code);
-  data.append("redirect_uri", config.github.callbackUri);
+  data.append("redirect_uri", getConfig().github.callbackUri);
 
-  const resp = await fetch(config.github.accessTokenUri, {
+  const resp = await fetch(getConfig().github.accessTokenUri, {
     method: "POST",
     body: data,
     headers: {

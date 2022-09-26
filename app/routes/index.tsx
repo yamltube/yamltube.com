@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Disclosure } from "@headlessui/react";
 import { ChevronUpIcon } from "@heroicons/react/solid";
 
-import { LogoSvg as GoogleSvg, YoutubeSvg } from "./google";
+import { YoutubeSvg } from "./google";
 import { GithubSvg } from "./github";
 import {
   OauthAccessToken,
@@ -13,20 +13,16 @@ import {
   getGithubAccessToken,
   isValidGoogleToken,
   isValidGithubToken,
-  isValidPulumiToken,
   createOrUpdateRepo,
   GoogleStorageKey,
   GithubStorageKey,
-  PulumiStorageKey,
 } from "~/utils";
-import { PulumiSvg } from "./pulumi/svg";
 
 function isValidRepo(repo: string) {
   return /.+\/.+/.test(repo);
 }
 
 export default function Index() {
-  const [pulumiToken, setPulumiToken] = useState<string>("");
   const [githubData, setGitHubData] = useState<OauthAccessToken | undefined>();
   const [googleData, setGoogleData] = useState<OauthAccessToken | undefined>();
   const [repo, setRepo] = useState("");
@@ -81,16 +77,6 @@ export default function Index() {
     }
   }, []);
 
-  useEffect(() => {
-    const token = localStorage.getItem(PulumiStorageKey);
-    if (token) {
-      setPulumiToken(token);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem(PulumiStorageKey, pulumiToken);
-  }, [pulumiToken]);
 
   useEffect(() => {
     let missing = [];
@@ -100,15 +86,12 @@ export default function Index() {
     if (!isValidGoogleToken(googleData)) {
       missing.push(YoutubeSvg());
     }
-    if (!isValidPulumiToken(pulumiToken)) {
-      missing.push(PulumiSvg());
-    }
-    setMissing(missing);
-  }, [githubData, googleData, pulumiToken]);
+     setMissing(missing);
+  }, [githubData, googleData]);
 
   async function onClick() {
     if (githubData && googleData && isValidRepo(repo)) {
-      await createOrUpdateRepo(repo, githubData, googleData, pulumiToken);
+      await createOrUpdateRepo(repo, githubData, googleData);
       setGoClicked(true);
       window.open(`https://github.com/${repo}`);
     }
@@ -122,11 +105,6 @@ export default function Index() {
   function deleteGitHubData() {
     localStorage.removeItem(GithubStorageKey);
     setGitHubData(undefined);
-  }
-
-  function deletePulumiData() {
-    localStorage.removeItem(PulumiStorageKey);
-    setPulumiToken("");
   }
 
   const buttonCss =
@@ -152,21 +130,10 @@ export default function Index() {
               width="150"
               height="20"
               title="GitHub"
-            ></iframe>
+            />
           </div>
         </div>
         {/* BODY */}
-        <div className="mb-4"></div>
-
-        <p className="mx-2 max-w-lg text-center font-extrabold text-gray-600">
-          make youtube playlists on github with only a couple of clicks.
-        </p>
-        <div className="mt-2" />
-        <p className="mx-2 max-w-lg text-center font-semibold text-gray-600">
-          i never use the access you grant to the site. after you click{" "}
-          <span className="font-extrabold text-green-500">go</span>, only your
-          github repo has access to your accounts.
-        </p>
         <div className="mt-6" />
         <div className="flex flex-col flex-wrap items-center rounded-xl border-2">
           <div className="mt-2 flex flex-row items-stretch gap-11 p-2">
@@ -204,38 +171,7 @@ export default function Index() {
             </div>
           </div>
           <div className="flex w-full flex-col items-center">
-            <h5 className="ml-2 mb-1 self-start pl-2">
-              enter your{" "}
-              <a
-                className="text-blue-600 underline"
-                href="https://app.pulumi.com"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.open("https://app.pulumi.com");
-                }}
-              >
-                pulumi access token
-              </a>
-              :
-            </h5>
-            <div className="ml-4 flex flex-row items-center justify-items-stretch self-start border-0">
-              <div className="form-input mr-3 flex h-10 min-h-fit flex-grow flex-row items-center rounded-md border-0 p-0 text-sm">
-                <div className="h-8 w-8">{PulumiSvg()}</div>
-                <input
-                  type="password"
-                  placeholder="pul-somereallylongstring"
-                  className="border-1 h-full w-52 flex-grow rounded-md p-0 pl-2 text-sm"
-                  value={pulumiToken}
-                  onChange={(e) => setPulumiToken(e.target.value)}
-                />
-              </div>
-
-              <Check
-                goodToGo={isValidPulumiToken(pulumiToken)}
-                onConfirm={deletePulumiData}
-              />
-            </div>
-            <div className="m-2 mt-8 flex flex-col items-center border-t-2 border-gray-500 bg-slate-100 p-8 pt-2 pb-2">
+            <div className="m-2 mt-4 flex flex-col items-center border-t-2 border-gray-500 bg-slate-100 p-8 pt-2 pb-2">
               <div className="flex min-w-full self-start border-b-2 border-gray-500 p-1 pl-4 pb-2">
                 github repo
               </div>
@@ -251,7 +187,6 @@ export default function Index() {
                   disabled={
                     !googleData ||
                     !githubData ||
-                    !isValidPulumiToken(pulumiToken) ||
                     !isValidRepo(repo)
                   }
                   className={
@@ -283,7 +218,6 @@ export default function Index() {
           </div>
         </div>
         <div className="mt-1 mb-8" />
-
         {FAQ()}
       </div>
     </main>
@@ -320,12 +254,12 @@ function Check({ goodToGo, onConfirm }: CheckProps) {
   }
 
   return (
-    <div
+    <button
       className={goodToGo ? "cursor-pointer hover:drop-shadow-2xl" : ""}
       onClick={onClick}
     >
       {val}
-    </div>
+    </button>
   );
 }
 
@@ -380,8 +314,7 @@ export function FAQ() {
       <Accordian titleContents={<span>what exactly does this site do?</span>}>
         it configures a fork of yamltube so that yamltube's github action just
         works™️. i set up github and google oauth apps so that you don't have to
-        set up oauth if you want to use yamltube. it just makes set up easier. i
-        love interactive setup!
+        set up oauth if you want to use yamltube. it just makes set up easier.
       </Accordian>
       <Accordian
         titleContents={<span>why do i need to use your oauth app?</span>}

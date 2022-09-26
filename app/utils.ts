@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useMatches } from "@remix-run/react";
 import type { User } from "./models/user.server";
-import { config } from "./config";
+import { getConfig } from "./config";
 import * as sodium from "libsodium-wrappers";
 import * as nacl from "js-nacl";
 import * as base64 from "base64-js";
@@ -31,11 +31,11 @@ export function useOptionalUser() {
 export const GithubStorageKey = "github_access_token";
 
 export function getGithubOAuthUrl() {
-  const url = new URL(config.github.oauthUri);
+  const url = new URL(getConfig().github.oauthUri);
 
-  url.searchParams.set("client_id", config.github.clientId);
-  url.searchParams.set("redirect_uri", config.github.callbackUri);
-  url.searchParams.set("scope", config.github.scope);
+  url.searchParams.set("client_id", getConfig().github.clientId);
+  url.searchParams.set("redirect_uri", getConfig().github.callbackUri);
+  url.searchParams.set("scope", getConfig().github.scope);
   url.searchParams.set("state", "stateeeee");
   return url.toString();
 }
@@ -92,14 +92,14 @@ export function isValidGithubToken(token?: OauthAccessToken): boolean {
 }
 
 export function getGoogleOAuthUrl(): string {
-  const url = new URL(config.google.authorizeUri);
+  const url = new URL(getConfig().google.authorizeUri);
 
-  url.searchParams.set("client_id", config.google.clientId);
-  url.searchParams.set("redirect_uri", config.google.redirectUri);
+  url.searchParams.set("client_id", getConfig().google.clientId);
+  url.searchParams.set("redirect_uri", getConfig().google.redirectUri);
   url.searchParams.set("response_type", "code");
   url.searchParams.set("include_granted_scopes", "true");
   url.searchParams.set("access_type", "offline");
-  url.searchParams.set("scope", config.google.scope);
+  url.searchParams.set("scope", getConfig().google.scope);
 
   return url.toString();
 }
@@ -164,7 +164,6 @@ export async function createOrUpdateRepo(
   fullName: string,
   githubToken: OauthAccessToken,
   googleToken: OauthAccessToken,
-  pulumiToken: string
 ) {
   if (!fullName.includes("/")) {
     throw new Error("Gotta contain a /");
@@ -216,15 +215,6 @@ export async function createOrUpdateRepo(
     key_id,
     "GOOGLE_APPLICATION_CREDENTIALS",
     JSON.stringify(googleToken),
-    headers
-  );
-  await createSecret(
-    owner,
-    repo,
-    key,
-    key_id,
-    "PULUMI_ACCESS_TOKEN",
-    pulumiToken,
     headers
   );
   await createSecret(

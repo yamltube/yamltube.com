@@ -1,5 +1,5 @@
 import type { OauthAccessToken } from "~/utils";
-import { config } from "~/config";
+import { getConfig } from "~/config";
 
 /**
  * Gets an OAuth2 token from Google.
@@ -7,17 +7,12 @@ import { config } from "~/config";
  */
 export async function getGoogleAccessToken(code: string, redirectUri: string) {
   const jsondata = {
-    client_id: config.google.clientId,
+    client_id: getConfig().google.clientId,
     client_secret: process.env.GOOGLE_CLIENT_SECRET,
     redirect_uri: redirectUri,
     code: code,
     grant_type: "authorization_code",
   };
-  const data = new FormData();
-  data.append("client_id", config.google.clientId);
-  data.append("client_secret", process.env.GOOGLE_CLIENT_SECRET as string);
-  data.append("code", code);
-  data.append("redirect_uri", redirectUri);
 
   const resp = await fetch("https://oauth2.googleapis.com/token", {
     method: "POST",

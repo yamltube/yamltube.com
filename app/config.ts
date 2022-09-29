@@ -9,9 +9,10 @@ function determineBaseUrl() {
 }
 
 const baseUrl = determineBaseUrl();
-console.log(`baseUrl: ${baseUrl}`);
 
 export function getConfig() {
+ console.log(`baseUrl: ${baseUrl}`);
+  console.log(JSON.stringify(config[baseUrl]));
   return config[baseUrl];
 }
 

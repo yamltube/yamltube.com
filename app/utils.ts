@@ -66,8 +66,6 @@ export type OauthAccessToken = {
   expires_in: string;
 };
 
-export const PulumiStorageKey = "pulumi_token";
-
 export function isValidPulumiToken(token: string): boolean {
   return token?.startsWith("pul-");
 }

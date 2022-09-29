@@ -163,7 +163,7 @@ export function getObsfuscatedCopy<T extends Record<string, any>>(
 export async function createOrUpdateRepo(
   fullName: string,
   githubToken: OauthAccessToken,
-  googleToken: OauthAccessToken,
+  googleToken: OauthAccessToken
 ) {
   if (!fullName.includes("/")) {
     throw new Error("Gotta contain a /");
@@ -176,7 +176,7 @@ export async function createOrUpdateRepo(
     Authorization: `token ${githubToken.access_token}`,
   };
   let resp = await fetch(
-    "https://api.github.com/repos/mchaynes/yamltube/generate",
+    "https://api.github.com/repos/yamltube/yamltube/generate",
     {
       method: "POST",
       headers: headers,

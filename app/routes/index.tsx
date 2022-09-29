@@ -77,7 +77,6 @@ export default function Index() {
     }
   }, []);
 
-
   useEffect(() => {
     let missing = [];
     if (!isValidGithubToken(githubData)) {
@@ -86,7 +85,7 @@ export default function Index() {
     if (!isValidGoogleToken(googleData)) {
       missing.push(YoutubeSvg());
     }
-     setMissing(missing);
+    setMissing(missing);
   }, [githubData, googleData]);
 
   async function onClick() {
@@ -124,7 +123,7 @@ export default function Index() {
             </h4>
             <div className="mt-4" />
             <iframe
-              src="https://ghbtns.com/github-btn.html?user=mchaynes&repo=yamltube&type=star&count=true"
+              src="https://ghbtns.com/github-btn.html?user=yamltube&repo=yamltube&type=star&count=true"
               frameBorder="0"
               scrolling="0"
               width="150"
@@ -184,11 +183,7 @@ export default function Index() {
                   onChange={(e) => setRepo(e.target.value)}
                 />
                 <button
-                  disabled={
-                    !googleData ||
-                    !githubData ||
-                    !isValidRepo(repo)
-                  }
+                  disabled={!googleData || !githubData || !isValidRepo(repo)}
                   className={
                     "rounded-md border border-transparent bg-green-500 px-4 py-1 font-bold text-white shadow-sm hover:bg-green-800 disabled:bg-red-500"
                   }
@@ -280,7 +275,7 @@ export function FAQ() {
         <p>
           more specifically, your browser will use the github credentials you
           granted to yamltube to go create a github repo based on the
-          `mchaynes/yamltube` template repo.
+          `yamltube/yamltube` template repo.
         </p>
         <p>
           i set up github and google oauth apps so that you don't have to go

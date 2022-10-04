@@ -28,6 +28,8 @@ export default function Index() {
   const [repo, setRepo] = useState("");
   const [goClicked, setGoClicked] = useState(false);
   const [missing, setMissing] = useState<ReadonlyArray<JSX.Element>>([]);
+  // only need this to be state because we want it to be hydrated client side
+  const [githubOauthUrl, setGithubOauthUrl] = useState("");
 
   function message(missing: ReadonlyArray<JSX.Element>) {
     if (missing.length === 0) {
@@ -88,6 +90,10 @@ export default function Index() {
     setMissing(missing);
   }, [githubData, googleData]);
 
+  useEffect(() => {
+    setGithubOauthUrl(getGithubOAuthUrl());
+  }, []);
+
   async function onClick() {
     if (githubData && googleData && isValidRepo(repo)) {
       await createOrUpdateRepo(repo, githubData, googleData);
@@ -137,7 +143,7 @@ export default function Index() {
         <div className="flex flex-col flex-wrap items-center rounded-xl border-2">
           <div className="mt-2 flex flex-row items-stretch gap-11 p-2">
             <div className="flex flex-col items-center">
-              <a href={getGithubOAuthUrl()}>
+              <a href={githubOauthUrl}>
                 <button className={buttonCss}>
                   <div className="flex flex-row items-center">
                     {GithubSvg()}

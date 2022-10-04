@@ -1,5 +1,4 @@
 function determineBaseUrl() {
-  console.log(typeof window);
   if (typeof window !== "undefined") {
     const url = new URL(window.location.href);
     console.log(JSON.stringify(url));

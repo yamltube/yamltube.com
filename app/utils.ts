@@ -66,10 +66,6 @@ export type OauthAccessToken = {
   expires_in: string;
 };
 
-export function isValidPulumiToken(token: string): boolean {
-  return token?.startsWith("pul-");
-}
-
 export function isValidGoogleToken(token?: OauthAccessToken): boolean {
   if (
     token?.access_token &&
@@ -211,17 +207,8 @@ export async function createOrUpdateRepo(
     repo,
     key,
     key_id,
-    "GOOGLE_APPLICATION_CREDENTIALS",
-    JSON.stringify(googleToken),
-    headers
-  );
-  await createSecret(
-    owner,
-    repo,
-    key,
-    key_id,
-    "STACK_NAME",
-    `${owner}-${repo}`,
+    "YAMLTUBE_REFRESH_TOKEN",
+    googleToken.refresh_token!,
     headers
   );
 }

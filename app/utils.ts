@@ -34,7 +34,7 @@ export function getGithubOAuthUrl() {
   const url = new URL(getConfig().github.oauthUri);
 
   url.searchParams.set("client_id", getConfig().github.clientId);
-  url.searchParams.set("redirect_uri", getConfig().github.callbackUri);
+  url.searchParams.set("redirect_uri", getConfig().github.redirectUri);
   url.searchParams.set("scope", getConfig().github.scope);
   url.searchParams.set("state", "stateeeee");
   return url.toString();

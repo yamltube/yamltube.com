@@ -5,14 +5,12 @@ function determineBaseUrl() {
     console.log(JSON.stringify(url));
     return `${url.protocol}//${url.host}`;
   }
-  return "http://localhost:3000";
+  return "https://yamltube.com";
 }
 
 const baseUrl = determineBaseUrl();
 
 export function getConfig() {
- console.log(`baseUrl: ${baseUrl}`);
-  console.log(JSON.stringify(config[baseUrl]));
   return config[baseUrl];
 }
 
@@ -28,7 +26,7 @@ type Config = {
     oauthUri: string;
     clientId: string;
     scope: string;
-    callbackUri: string;
+    redirectUri: string;
     accessTokenUri: string;
   };
 };
@@ -48,7 +46,7 @@ export const config: { [key: string]: Config } = {
       oauthUri: "https://github.com/login/oauth/authorize",
       clientId: "5223206b50553304aa91",
       scope: "repo",
-      callbackUri: `${baseUrl}/github/callback`,
+      redirectUri: `${baseUrl}/github/callback`,
       accessTokenUri: "https://github.com/login/oauth/access_token",
     },
   },
@@ -66,7 +64,7 @@ export const config: { [key: string]: Config } = {
       oauthUri: "https://github.com/login/oauth/authorize",
       clientId: "60dabc11fe05438beb0a",
       scope: "repo",
-      callbackUri: `${baseUrl}/github/callback`,
+      redirectUri: `${baseUrl}/github/callback`,
       accessTokenUri: "https://github.com/login/oauth/access_token",
     },
   },

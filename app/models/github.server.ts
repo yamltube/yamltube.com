@@ -6,7 +6,7 @@ export async function getGithubAccessToken(code: string) {
   data.append("client_id", getConfig().github.clientId);
   data.append("client_secret", process.env.GITHUB_CLIENT_SECRET as string);
   data.append("code", code);
-  data.append("redirect_uri", getConfig().github.callbackUri);
+  data.append("redirect_uri", getConfig().github.redirectUri);
 
   const resp = await fetch(getConfig().github.accessTokenUri, {
     method: "POST",
